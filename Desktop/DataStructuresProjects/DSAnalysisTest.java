@@ -10,10 +10,49 @@ public class DSAnalysisTest {
             list.add("Image-Management"); //where it forms amortized constant because it forces the array to create an array of doubled size and moving everything intp the new array
             System.out.println("Database exists? " + list.contains("Database"));
             list.printArray();
+            String obj = "Image Processing";
+            int index = list.contains(obj);
+            if (index >=0){
+                list.lazyRemove(index);
+            }
+            else 
+                System.out.printf("Object %s does not exist\n", obj);
+            list.lazyRemove(2); //figure out how to append
+            //O(n) for lazyRemove b/c call to contains is required and linear
+            list.printArray();
+            // list.get(2)
             list.clear();
             list.printArray();
 
         }
+        public static int binaryInsert(DSArrayList<String> list, String insertKey){
+            int lowerBound = 0;
+            int nElements = list.size();
+            int upperBound = nElements - 1;
+
+            while (true){
+               int curIn = ((upperBound + lowerBound) /2);
+                if (nElements == 0)
+                    return curIn = 0;
+                if (lowerBound == curIn)
+                    if (list.get(curIn).compareTo(insertKey) > 0){
+                        return curIn;
+                    }
+            }
+            if (list.get(curIn).compareTo(insertKey)<0) {
+                lowerBound = curIn + 1;
+                    if (lowerBound > upperBound){
+                        return curIn += 1;
+                    }
+            
+            else if (lowerBound > upperBound){
+                return curIn;
+            }
+            else {
+                upperBound = curIn - 1;
+            }
+        }
+    }
         
     }
 class DSArrayList<E> { //an array of type E that can take on any type which allows us to put <String> in line 3s command
@@ -42,7 +81,7 @@ class DSArrayList<E> { //an array of type E that can take on any type which allo
         dataArray = (E[]) new Object[capacity]; //casting an array object with 4 elements into a string array (E is a string)
     }
 
-    public boolean add(E e) { //*O(1)
+    public boolean add(E e) { //*O(1) // its currently dumb but needs to have a move function if doing binary search
         if (size == dataArray.length) { //O(N) beause of ensurecapacity only when we need to double the array
             ensureCapacity(size + 1);
             //size is how many elements are in the array data.length is how much the array can hold
@@ -75,11 +114,12 @@ class DSArrayList<E> { //an array of type E that can take on any type which allo
         return dataArray.length;
     }
 
-    public boolean contains(Object e) { //O(n) bc of the for index
-        return indexOf(e) != -1;
+    public int contains(Object e) { //O(n) bc of the for index
+        int index = indexOf(e);
+        return index;
     }
 
-    public int indexOf(Object e) { //O(n) bc of the for loop
+    public int indexOf(Object e) { //O(n) bc of the for loop | object is needed for generics
         for (int i = 0; i < size; i++) {
             if (e.equals(dataArray[i])) {
                 return i;
@@ -105,9 +145,18 @@ class DSArrayList<E> { //an array of type E that can take on any type which allo
     public E remove(int index){
         checkBoundExclusive(index);
         E temp = dataArray[index];
-        if (index != --size)
-            System.arraycopy(dataArray, index+1, dataArray, size, index);
+        if (index != --size) //
+            System.arraycopy(dataArray, index+1, dataArray, size, index);  //(object src, srcpos, )
         dataArray[size] = null;
+        return temp;
+    }
+    //added sept 6, 
+    public E lazyRemove(int index){
+        checkBoundExclusive(index); //check if your position is valid
+        E temp = dataArray[index]; //so you know what value to remove
+        //lazy deletion doesnt shift
+        System.out.printf("%s\n", temp);
+        dataArray[index] = null; //lazy deletion so no need for shift, rather just set the index to null
         return temp;
     }
     private void checkBoundExclusive(int index){
@@ -115,8 +164,18 @@ class DSArrayList<E> { //an array of type E that can take on any type which allo
             throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size);
             //look into arraycopy for java
     }
-
-    
+    //added sept 6
+    public E get(int index){
+        rangeCheck(index);
+        return dataArray[index];
+    }
+    private void rangeCheck(int index){
+        if (index>= size)
+            throw new IndexOutOfBoundsException(outOfBoundMsg(index));
+    }
+    private String outOfBoundMsg(int index){
+        return "Index: " + index + ". size: " + this.size;
+    }
 
 }
 
