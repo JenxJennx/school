@@ -29,22 +29,23 @@ public class DSAnalysisTest {
             int lowerBound = 0;
             int nElements = list.size();
             int upperBound = nElements - 1;
+            int curIn;
 
             while (true){
-               int curIn = ((upperBound + lowerBound) /2);
+               curIn = ((upperBound + lowerBound) /2);
                 if (nElements == 0)
                     return curIn = 0;
-                if (lowerBound == curIn)
+                if (lowerBound == curIn){
                     if (list.get(curIn).compareTo(insertKey) > 0){
                         return curIn;
-                    }
             }
+        }
             if (list.get(curIn).compareTo(insertKey)<0) {
                 lowerBound = curIn + 1;
                     if (lowerBound > upperBound){
                         return curIn += 1;
                     }
-            
+                }
             else if (lowerBound > upperBound){
                 return curIn;
             }
@@ -52,8 +53,7 @@ public class DSAnalysisTest {
                 upperBound = curIn - 1;
             }
         }
-    }
-        
+        }
     }
 class DSArrayList<E> { //an array of type E that can take on any type which allows us to put <String> in line 3s command
     //a generic class using E
@@ -178,6 +178,8 @@ class DSArrayList<E> { //an array of type E that can take on any type which allo
     }
 
 }
+
+
 
 
 
